@@ -9,5 +9,8 @@ find.py (das eigentliche Skript):
     - lineare Regression der Testdaten
     - if der R² größer als ein Schwellenwert (Plot grün)
     - else (Plot rot)
+    
+requirements:
+pip install numpy matplotlib scikit-learn
 
 alle Plots werden in "plots" abgespeichert
