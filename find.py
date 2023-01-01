@@ -18,7 +18,7 @@ def generate_data(num_files=10):
         # covariance matrix
         cov = [[1, corr], [corr, 1]]
 
-        # generate bivariate random variable with
+        # generate bivariate random variable
         x = np.random.multivariate_normal(mean, cov, size=500)
 
         # save to csv file
@@ -68,6 +68,7 @@ def plot_data():
         # plot regression line
         ax.plot(x_plot, predict(x_plot), c=color, label=f"y = {model[0]:.3f} x + {model[1]:.3f}\nR²={r2:.3f}")
 
+        # plotting options
         ax.legend()
         ax.grid()
         ax.set_axisbelow(True)
@@ -77,6 +78,7 @@ def plot_data():
 
 
 if __name__ == "__main__":
+
     # generate_data(num_files=10)
 
     plot_data()
