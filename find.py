@@ -3,51 +3,80 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
 
-# loop through all files in data
-for file in os.listdir("data"):
 
-    print(f"File: {file}")
+def generate_data(num_files=10):
 
-    # load Data from .csv
-    data = np.genfromtxt(os.path.join("data", file), delimiter=";")
+    # loop num_files times
+    for i in range(num_files):
 
-    # extract cols
-    x = data[:, 0]
-    y = data[:, 1]
+        # mean tuple
+        mean = (0, 0)
 
-    # fit 1D polynomial to data
-    model = np.polyfit(x, y, 1)
+        # correlation coefficient random distribution
+        corr = np.random.normal(0.95, 0.1, 1).item()
 
-    # generate prediction function with coeff.
-    predict = np.poly1d(model)
+        # covariance matrix
+        cov = [[1, corr], [corr, 1]]
 
-    # calculate R² Score
-    r2 = r2_score(y, predict(x))
+        # generate bivariate random variable with
+        x = np.random.multivariate_normal(mean, cov, size=500)
 
-    # check and set color
-    if r2 >= 0.9:
-        color = "green"
-    else:
-        color = "red"
+        # save to csv file
+        np.savetxt(os.path.join("data", f"{i+1}.csv"), x, delimiter=";")
 
-    # min, max for range
-    min, max = np.min(x), np.max(x)
 
-    ## plotting
-    fig, ax = plt.subplots()
+def plot_data():
+    # loop through all files in data
+    for file in os.listdir("data"):
 
-    # loaded data
-    ax.scatter(x, y, s=4, c="black")
+        print(f"File: {file}")
 
-    # xpoints for regression line
-    x_plot = np.linspace(min, max, 100)
+        # load Data from .csv
+        data = np.genfromtxt(os.path.join("data", file), delimiter=";")
 
-    # plot regression line
-    ax.plot(x_plot, predict(x_plot), c=color, label=f"y = {model[0]:.3f} x + {model[1]:.3f}\nR²={r2:.3f}")
+        # extract cols
+        x = data[:, 0]
+        y = data[:, 1]
 
-    ax.legend()
-    ax.grid()
-    ax.set_axisbelow(True)
+        # fit 1D polynomial to data
+        model = np.polyfit(x, y, 1)
 
-    # save the figures to the folder plots
-    plt.savefig(os.path.join("plots", f"{file.replace('.csv', '')}.png"))
+        # generate prediction function with coeff.
+        predict = np.poly1d(model)
+
+        # calculate R² Score
+        r2 = r2_score(y, predict(x))
+
+        # check and set color
+        if r2 >= 0.9:
+            color = "green"
+        else:
+            color = "red"
+
+        # min, max for range
+        min, max = np.min(x), np.max(x)
+
+        ## plotting
+        fig, ax = plt.subplots()
+
+        # loaded data
+        ax.scatter(x, y, s=4, c="black")
+
+        # xpoints for regression line
+        x_plot = np.linspace(min, max, 100)
+
+        # plot regression line
+        ax.plot(x_plot, predict(x_plot), c=color, label=f"y = {model[0]:.3f} x + {model[1]:.3f}\nR²={r2:.3f}")
+
+        ax.legend()
+        ax.grid()
+        ax.set_axisbelow(True)
+
+        # save the figures to the folder plots
+        plt.savefig(os.path.join("plots", f"{file.replace('.csv', '')}.png"))
+
+
+if __name__ == "__main__":
+    # generate_data(num_files=10)
+
+    plot_data()
